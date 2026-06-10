@@ -18,6 +18,24 @@ const select_algo = async function(algo){
     }
 }
 
+//buscar um pelo ID do outro
+const select_pizza_porID_tipo = async function(algo){
+    try {
+        
+    } catch (error) {
+        return false
+    }
+}
+
+const select_tipo_porID_pizza = async function(algo){
+    try {
+        
+    } catch (error) {
+        return false
+    }
+}
+//-------------------------------------------
+
 const selectALL_algo = async function(algo){
     try {
         
