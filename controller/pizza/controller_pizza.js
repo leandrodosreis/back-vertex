@@ -63,7 +63,7 @@ const listarPizza = async function () {
             return customMessage.ERROR_INTERNAL_SERVER_MODEL
         }
     } catch (error) {
-        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER //500 (controller)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER 
     }
 }
 

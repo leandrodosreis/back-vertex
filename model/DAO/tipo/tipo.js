@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Objetivo: Arquivo responsável pelo CRUD de dados do tipo no banco de dados
+ * Data: 11/06/2026
+ * Autor: Gabriel
+ * Versão: 1.0
+ *********************************************************************************/
+
+
 const knex = require('knex')
 const knexdatabaseConfig = require('../../database_config/knexConfig.js')
 const knexConection = knex(knexdatabaseConfig.development)

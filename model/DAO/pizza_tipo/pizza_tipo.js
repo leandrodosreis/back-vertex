@@ -1,3 +1,11 @@
+/*******************************************************************************
+ * Objetivo: Arquivo responsável pelo CRUD de dados do tipo na tabela de relação entre Pizza e Tipo
+ * Data: 11/06/2026
+ * Autor: Enzzo
+ * Versão: 1.0
+ *********************************************************************************/
+
+
 const knex = require('knex')
 const knexdatabaseConfig = require('../../database_config/knexConfig.js')
 const knexConection = knex(knexdatabaseConfig.development)
