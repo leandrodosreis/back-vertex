@@ -13,9 +13,11 @@ const corsOptions = {
     allowedHeaders: ['Content-type', 'Authorization'] 
 }
 
-const controllerPizza = require('./controller/pizza/controller_pizza')
+
 
 app.use(cors(corsOptions))
+
+const controllerPizza = require('./controller/pizza/controller_pizza')
 
 
 //Ator
