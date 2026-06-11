@@ -27,6 +27,8 @@ const inserirNovaPizza = async function (pizza, contentType) {
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATED_ITEM.status_code
                     customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATED_ITEM.message
                     customMessage.DEFAULT_MESSAGE.response = pizza
+
+                    return customMessage.DEFAULT_MESSAGE 
                 }else{
                     return customMessage.ERROR_INTERNAL_SERVER_MODEL 
                 }
@@ -35,46 +37,16 @@ const inserirNovaPizza = async function (pizza, contentType) {
             return customMessage.ERROR_CONTENT_TYPE
         }
     } catch (error) {
+        console.log(error)
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
-
-
-
-    // try {
-    //     if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
-
-    //         let validar = await validarDados(ator)
-
-    //         if (validar) {
-    //             return validar
-    //         } else {
-    //             let result = await atorDAO.insertAtor(await tratarDados(ator))
-    //             if (result) {
-
-    //                 ator.id = result
-
-    //                 customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATED_ITEM.status
-    //                 customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATED_ITEM.status_code
-    //                 customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATED_ITEM.message
-    //                 customMessage.DEFAULT_MESSAGE.response = ator
-
-    //                 return customMessage.DEFAULT_MESSAGE 
-    //             } else {
-    //                 return customMessage.ERROR_INTERNAL_SERVER_MODEL 
-    //             }
-    //         }
-    //     } else {
-    //         return customMessage.ERROR_CONTENT_TYPE
-    //     }
-    // } catch (error) {
-    //     return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
-    // }
 }
+
 
 let customMessage = JSON.parse(JSON.stringify(configMessages))
 
 const validarDados = async function (pizza) {
-if(pizza.nome == undefined || pizza.nome == '' || pizza.nome == null ||  ator.nome.length > 40){
+if(pizza.nome == undefined || pizza.nome == '' || pizza.nome == null ||  pizza.nome.length > 40){
     customMessage.ERROR_BAD_REQUEST.field = '[NOME] INVÁLIDO'
     return customMessage.ERROR_BAD_REQUEST
 }else if(pizza.descricao == undefined || pizza.descricao == '' || pizza.descricao == null ){
