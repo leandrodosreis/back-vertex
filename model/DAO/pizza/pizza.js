@@ -2,7 +2,7 @@ const knex = require('knex')
 const knexdatabaseConfig = require('../../database_config/knexConfig.js')
 const knexConection = knex(knexdatabaseConfig.development)
 
-const insert_algo = async function(pizza){
+const insert_pizza = async function(pizza){
     try {
         let sql = `insert into tbl_pizza (
             nome,
