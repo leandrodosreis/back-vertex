@@ -87,7 +87,7 @@ const update_pizza = async function (pizza) {
     }
 }
 
-const delet_pizza = async function (id) {
+const delete_pizza = async function (id) {
     try {
         let sql = `delete from tbl_pizza where id=${id}`
 
@@ -107,5 +107,5 @@ module.exports = {
     selectALL_pizza,
     select_ByIdPizza,
     update_pizza,
-    delet_pizza
+    delete_pizza
 }

@@ -82,7 +82,7 @@ const updateAdministrador = async function(administrador){
     }
 }
 
-const deletAdministrador = async function(id){
+const deleteAdministrador = async function(id){
     try {
         let sql = `delet from tbl_administrador where id = ${id}`
 
@@ -101,5 +101,5 @@ module.exports={
     selectByIdAdministrador,
     selectALLAdministrador,
     updateAdministrador,
-    deletAdministrador
+    deleteAdministrador
 }

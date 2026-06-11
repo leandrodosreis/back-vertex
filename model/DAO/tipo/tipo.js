@@ -77,7 +77,7 @@ const updateTipo = async function(tipo){
     }
 }
 
-const deletTipo = async function(id){
+const deleteTipo = async function(id){
     try {
         let sql = `delete from tbl_tipo where id = ${id}`
         let result = await knexConection.raw(sql)
@@ -94,5 +94,5 @@ module.exports={
     selectALLTipo,
     selectByIdTipo,
     updateTipo,
-    deletTipo
+    deleteTipo
 }
