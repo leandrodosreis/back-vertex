@@ -2,44 +2,97 @@ const knex = require('knex')
 const knexdatabaseConfig = require('../../database_config/knexConfig.js')
 const knexConection = knex(knexdatabaseConfig.development)
 
-const insert_algo = async function(algo){
+const insertAdministrador = async function(administrador){
     try {
+        let sql = `insert into tbl_administrador (
+        senha,
+        nome
+        ) values (
+         '${administrador.senha}',
+         '${administrador.nome}'
+         );`
+
+        //Encaminha para o BD o scriptSQL
+        let result = await knexConection.raw(sql)
+        
+        if(result)
+            return result[0].insertId //Retorna o ID gerado no insert
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
+const selectByIdAdministrador = async function(id){
+    try {
+        let sql = `select * from tbl_administrador where id = ${id}`
+
+        //Encaminha para o BD o scriptSQL
+        let result = await knexConection.raw(sql)
+        
+        if(Array.isArray(result))
+            return result[0] 
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
+const selectALLAdministrador = async function(){
+    try {
+        let sql = `select * from tbl_administrador order by id desc`
+
+        //Encaminha para o BD o scriptSQL
+        let result = await knexConection.raw(sql)
+        
+        if(result && result[0])
+            return JSON.parse(JSON.stringify(result[0]))
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
+const updateAdministrador = async function(administrador){
+    try {
+        let sql = `update into tbl_administrador set 
+        senha = ${administrador.senha},
+        nome = ${administrador.nome}
+        where id = ${id}`
+
+        //Encaminha para o BD o scriptSQL
+        let result = await knexConection.raw(sql)
+        
+        if(result)
+            return result[0].insertId 
+        else
+            return false
+    } catch (error) {
+        return false
+    }
+}
+
+const deletAdministrador = async function(id){
+    try {
+        let sql = `delet from tbl_administrador where id = ${id}`
+
+        //Encaminha para o BD o scriptSQL
+        let result = await knexConection.raw(sql)
+        
+        return result
         
     } catch (error) {
         return false
     }
 }
 
-const select_algo = async function(algo){
-    try {
-        
-    } catch (error) {
-        return false
-    }
+module.exports={
+    insertAdministrador,
+    selectByIdAdministrador,
+    selectALLAdministrador,
+    updateAdministrador,
+    deletAdministrador
 }
-
-const selectALL_algo = async function(algo){
-    try {
-        
-    } catch (error) {
-        return false
-    }
-}
-
-const update_algo = async function(algo){
-    try {
-        
-    } catch (error) {
-        return false
-    }
-}
-
-const delet_algo = async function(algo){
-    try {
-        
-    } catch (error) {
-        return false
-    }
-}
-
-module.exports={}
