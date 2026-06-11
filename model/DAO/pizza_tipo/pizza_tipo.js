@@ -146,6 +146,21 @@ const delete_PizzaTipo = async function (id) {
     }
 }
 
+const deleteTipoByIdPizza = async function(idPizza){
+    try {
+        let sql = `delete from tbl_pizza_tipo where id_pizza=${idPizza}`
+        let result = await knexConection.raw(sql)
+
+        if(result){
+            return true
+        }else{
+            return false
+        }
+    } catch (error) {
+        return false
+    }
+}
+
 module.exports = {
     insert_PizzaTipo,
     update_PizzaTipo,
@@ -153,5 +168,6 @@ module.exports = {
     select_ByIdPizzaTipo,
     select_pizza_porID_tipo,
     select_tipo_porID_pizza,
-    delete_PizzaTipo
+    delete_PizzaTipo,
+    deleteTipoByIdPizza
 }
