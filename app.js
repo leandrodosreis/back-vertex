@@ -18,62 +18,22 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 const controllerPizza = require('./controller/pizza/controller_pizza.js')
-const controllerTipo = require('./controller/tipo/controller_tipo.js')
+
 
 //pizza
-app.post('/v1/senai/pizzaria/pizza', bodyParserJSON, async function(request, response){
-    let dados = request.body
-
-    let contentType = request.headers['content-type']
-
-    let result = await controllerPizza.inserirNovaPizza(dados, contentType)
-    
-    response.status(result.status_code)
-    response.json(result)
-
-})
-
-app.get('/v1/senai/pizzaria/pizza', bodyParserJSON, async function(request, response){
-
-    let result = await controllerPizza.listarPizza()
-    
-    response.status(result.status_code)
-    response.json(result)
-
-})
-
-
-
+const pizzarouter = require('./routes/pizza.router.js')
+app.use('/v1/senai/pizzaria/pizza', cors(), pizzarouter)
 
 
 //tipo
-app.post('/v1/senai/pizzaria/tipo', bodyParserJSON, async function(request, response){
-    let dados = request.body
+const tiporouter = require('./routes/tipo.router.js')
+app.use('/v1/senai/pizzaria/tipo', cors(), tiporouter)
 
-    let contentType = request.headers['content-type']
 
-    let result = await controllerTipo.inserirnovotipo(dados, contentType)
-    
-    response.status(result.status_code)
-    response.json(result)
+//administrador
+const administradorrouter = require('./routes/administrador.router.js')
+app.use('/v1/senai/pizzaria/administrador')
 
-})
-app.get('/v1/senai/pizzaria/tipo', bodyParserJSON, async function(request, response){
-
-    let result = await controllerTipo.listartipo()
-    
-    response.status(result.status_code)
-    response.json(result)
-
-})
-app.get('/v1/senai/pizzaria/tipo/:id', bodyParserJSON, async function(request, response){
-    let id = request.params.id
-    let result = await controllerTipo.buscartipo(id)
-    
-    response.status(result.status_code)
-    response.json(result)
-
-})
 //porta da API
 app.listen(7070, function(){
     console.log('API aguardadndo novas requisições ...')
