@@ -30,7 +30,7 @@ app.use('/v1/senai/pizzaria/tipo', cors(), tiporouter)
 
 //administrador
 const administradorrouter = require('./routes/administrador.router.js')
-app.use('/v1/senai/pizzaria/administrador')
+app.use('/v1/senai/pizzaria/administrador', cors(),administradorrouter)
 
 //porta da API
 app.listen(7070, function(){

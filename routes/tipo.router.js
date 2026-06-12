@@ -4,7 +4,7 @@ const bodyparser = require('body-parser')
 const bodyparserJSON = bodyparser.json()
 const router = express.Router()
 
-const controllerTipo = require('./controller/tipo/controller_tipo.js')
+const controllerTipo = require('../controller/tipo/controller_tipo.js')
 
 
 router.get('/', bodyparserJSON, async function(request, response){
