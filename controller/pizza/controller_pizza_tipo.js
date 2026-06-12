@@ -118,6 +118,34 @@ const buscarPizzasIdTipo = async function (idTipo) {
     }
 }
 
+const buscarTipoIdPizza = async function (idPizza) {
+    let customMessage = JSON.parse(JSON.stringify(configMessages))
+    try {
+        if (idPizza == undefined || String(idPizza).replaceAll(' ', '') == '' || idPizza == '' || idPizza == null || isNaN(idPizza) || idPizza <= 0) {
+            customMessage.ERROR_BAD_REQUEST.field = '[ID_PIZZA] INVÁLIDO'
+            return customMessage.ERROR_BAD_REQUEST //400
+        } else {
+            let result = await pizTipDAO.select_tipo_porID_pizza(idPizza)
+            if (result) {
+                if (result.length > 0) {
+                    customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
+                    customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
+                    customMessage.DEFAULT_MESSAGE.response.pizza_tipo = result
+
+                    return customMessage.DEFAULT_MESSAGE
+                } else {
+                    return customMessage.ERROR_NOT_FOUND
+                }
+            } else {
+                return customMessage.ERROR_INTERNAL_SERVER_MODEL
+            }
+        }
+
+    } catch (error) {
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
+    }
+}
+
 const atualizarPizzaTipo = async function (pizzaTipo, id) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
     try {
@@ -212,5 +240,6 @@ module.exports = {
     buscarPizzaTipo,
     buscarPizzasIdTipo,
     excluirPizzaTipo,
-    excluirTipoIdPizza
+    excluirTipoIdPizza,
+    buscarTipoIdPizza
 }
