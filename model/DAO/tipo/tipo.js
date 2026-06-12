@@ -13,9 +13,9 @@ const knexConection = knex(knexdatabaseConfig.development)
 const insertTipo = async function(tipo){
     try {
        let sql = `insert into tbl_tipo(
-        tipo
+        nome
         ) value (
-         '${tipo.tipo}'
+         '${tipo.nome}'
          );`
          let result = await knexConection.raw(sql)
          if(result)
@@ -60,7 +60,7 @@ const selectALLTipo = async function(){
 const updateTipo = async function(tipo){
     try {
         let sql =`update tbl_tipo set
-        tipo = '${tipo.tipo}'
+        tipo = '${tipo.nome}'
         where id = ${id}`
 
         let result = await knexConection.raw(sql)
