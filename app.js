@@ -25,7 +25,7 @@ app.use('/v1/senai/pizzaria/pizza', cors(), pizzarouter)
 
 //tipo
 const tiporouter = require('./routes/tipo.router.js')
-app.use('/v1/senai/pizzaria/tipo', cors(), tiporouter)
+app.use('/v1/senai/pizzaria/pizza/tipo', cors(), tiporouter)
 
 
 //administrador
