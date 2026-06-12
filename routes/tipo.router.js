@@ -23,3 +23,5 @@ router.get('/:id', bodyparserJSON, async function(request, response){
     response.json(result)
 
 })
+
+module.exports = router

@@ -16,7 +16,6 @@ router.post('/', bodyparserJSON, async function(request, response){
     response.status(result.status_code)
     response.json(result)
 })
-
 router.get('/', bodyparserJSON, async function(request, response){
 
     let result = await controllerPizza.listarPizza()
@@ -25,3 +24,5 @@ router.get('/', bodyparserJSON, async function(request, response){
     response.json(result)
 
 })
+
+module.exports = router

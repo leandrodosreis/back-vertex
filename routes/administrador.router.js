@@ -6,3 +6,5 @@ const router = express.Router()
 
 const controlleradministrador = require('../controller/administrador/controller.administrador.js')
 
+
+module.exports = router
