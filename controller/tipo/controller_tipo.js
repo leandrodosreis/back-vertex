@@ -67,7 +67,7 @@ const buscartipo = async function(id) {
             customMessage.ERROR_BAD_REQUEST = '[ID] inválido'
             return customMessage
         }else{
-            let result = await tipoDAO.deletTipo(id)
+            let result = await tipoDAO.selectByIdTipo(id)
 
             if(result){
 
@@ -85,6 +85,7 @@ const buscartipo = async function(id) {
             }
         }
     } catch (error) {
+        console.log(error)
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
