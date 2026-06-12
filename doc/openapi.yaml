@@ -5,7 +5,7 @@ info:
    API destinada ao controle de pizzas - SENAI
   termsOfService: http://swagger.io/terms/
   contact:
-    email: seunome@email.com
+    email: vertex@email.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html

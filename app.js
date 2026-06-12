@@ -17,8 +17,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-const controllerPizza = require('./controller/pizza/controller_pizza.js')
-
 
 //pizza
 const pizzarouter = require('./routes/pizza.router.js')
