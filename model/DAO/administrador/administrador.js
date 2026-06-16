@@ -31,6 +31,24 @@ const insertAdministrador = async function(administrador){
     }
 }
 
+const selectAdministradorByNome = async function(nome){
+    try {
+
+        let sql = `select * from tbl_administrador
+                   where nome = '${nome}'`
+
+        let result = await knexConection.raw(sql)
+
+        if(Array.isArray(result))
+            return result[0] 
+        else
+            return false
+
+    } catch(error){
+        return false
+    }
+}
+
 const selectByIdAdministrador = async function(id){
     try {
         let sql = `select * from tbl_administrador where id = ${id}`

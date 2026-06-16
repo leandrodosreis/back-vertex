@@ -181,7 +181,7 @@ const validarDados = async function (administrador) {
     if (administrador.nome == undefined || administrador.nome == '' || administrador.nome == null || administrador.nome.length > 90) {
         customMessage.ERROR_BAD_REQUEST.field = '[NOME] INVÁLIDO'
         return customMessage.ERROR_BAD_REQUEST
-    } else if (administrador.descricao == undefined || administrador.senha == '' || administrador.senha == null || administrador.senha.length > 512) {
+    } else if (administrador.senha == undefined || administrador.senha == '' || administrador.senha == null || administrador.senha.length > 512) {
         customMessage.ERROR_BAD_REQUEST.field = '[SENHA] INVÁLIDA'
         return customMessage.ERROR_BAD_REQUEST
     } else {
