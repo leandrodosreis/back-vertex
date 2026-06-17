@@ -20,15 +20,18 @@ router.post('/', verifyJWT, bodyparserJSON, async function(request, response){
 router.get('/', bodyparserJSON, async function(request, response){
 
     let result = await controllerTipo.listartipo()
-    
+
     response.status(result.status_code)
     response.json(result)
 
 })
+
 router.get('/:id', bodyparserJSON, async function(request, response){
+
     let id = request.params.id
+
     let result = await controllerTipo.buscartipo(id)
-    
+
     response.status(result.status_code)
     response.json(result)
 

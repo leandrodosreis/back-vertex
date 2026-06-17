@@ -18,7 +18,6 @@ router.post('/', bodyparserJSON, async function(request, response){
 router.post(
     '/login', bodyparserJSON,
     async function(req,res){
-console.log(req.body)
         let contentType =
             req.headers['content-type']
 

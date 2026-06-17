@@ -60,7 +60,6 @@ const inserirNovaPizza = async function (pizza, contentType) {
             return customMessage.ERROR_CONTENT_TYPE
         }
     } catch (error) {
-        console.log(error)
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }

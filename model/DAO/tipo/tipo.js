@@ -81,6 +81,7 @@ const deleteTipo = async function(id){
        return result
 
     } catch (error) {
+        console.log(error)
         return false
     }
 }

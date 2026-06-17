@@ -17,16 +17,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-
-//pizza
-const pizzarouter = require('./routes/pizza.router.js')
-app.use('/v1/senai/pizzaria/pizza', cors(), pizzarouter)
-
-
 //tipo
 const tiporouter = require('./routes/tipo.router.js')
 app.use('/v1/senai/pizzaria/pizza/tipo', cors(), tiporouter)
 
+//pizza
+const pizzarouter = require('./routes/pizza.router.js')
+app.use('/v1/senai/pizzaria/pizza', cors(), pizzarouter)
 
 //administrador
 const administradorrouter = require('./routes/administrador.router.js')

@@ -44,7 +44,6 @@ const inserirNovoAdministrador = async function (administrador, contentType) {
             return customMessage.ERROR_CONTENT_TYPE
         }
     } catch (error) {
-        console.log(error)
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
@@ -71,7 +70,7 @@ const autenticarAdministrador = async function(
             await admDAO.selectAdministradorByNome(
                 administrador.nome
             )
-console.log(result)
+
         if(!result || result.length == 0){
 
             customMessage.ERROR_NOT_FOUND.field =
@@ -116,8 +115,6 @@ console.log(result)
         }
 
     }catch(error){
-
-        console.log(error)
 
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
 

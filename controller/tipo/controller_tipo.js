@@ -19,7 +19,6 @@ const inserirnovotipo = async function(tipo, contentType) {
                     }else{
                         
                         let resultado = await tipoDAO.insertTipo( await tratardados(tipo))
-                        console.log(resultado)
                         if(resultado){
                             
                             
@@ -37,7 +36,6 @@ const inserirnovotipo = async function(tipo, contentType) {
                     return customMessage.ERROR_CONTENT_TYPE
                 }
             } catch (error) {
-                console.log(error)
             return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER //500 controll
             }
 }
@@ -55,9 +53,9 @@ const atualizartipo = async function(tipo, contentType, id) {
                     let result = await tipoDAO.updateTipo(await tratardados(tipo))
 
                     if(result){
-                        customMessage.DEFAULT_MESSAGE.status         = customMessage.SUCCESS_UPDATED_ITEM.status
-                        customMessage.DEFAULT_MESSAGE.status_code    = customMessage.SUCCESS_UPDATED_ITEM.status_code
-                        customMessage.DEFAULT_MESSAGE.message        = customMessage.SUCCESS_UPDATED_ITEM.message
+                        customMessage.DEFAULT_MESSAGE.status         = customMessage.SUCCESS_UPDATE_ITEM.status
+                        customMessage.DEFAULT_MESSAGE.status_code    = customMessage.SUCCESS_UPDATE_ITEM.status_code
+                        customMessage.DEFAULT_MESSAGE.message        = customMessage.SUCCESS_UPDATE_ITEM.message
                         customMessage.DEFAULT_MESSAGE.response       = tipo
 
                         return customMessage.DEFAULT_MESSAGE
@@ -74,6 +72,7 @@ const atualizartipo = async function(tipo, contentType, id) {
             return customMessage.ERROR_CONTENT_TYPE
         }
     } catch (error) {
+        console.log(error)
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
@@ -97,7 +96,6 @@ const listartipo = async function() {
                         return customMessage.ERROR_INTERNAL_SERVER_MODEL
                 }
             } catch (error) {
-                console.log(error)
             return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER //500 controll
             }
 }
@@ -106,7 +104,7 @@ const buscartipo = async function(id) {
 
     try {
         if(id == undefined || String(id).replaceAll(' ', '') == '' || id == null || isNaN(id) || id <= 0){
-            customMessage.ERROR_BAD_REQUEST = '[ID] inválido'
+            customMessage.ERROR_BAD_REQUEST.field = '[ID] inválido'
             return customMessage
         }else{
             let result = await tipoDAO.selectByIdTipo(id)
@@ -127,7 +125,6 @@ const buscartipo = async function(id) {
             }
         }
     } catch (error) {
-        console.log(error)
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
@@ -139,6 +136,7 @@ const excluirtipo = async function(id) {
 
             if(validar.status){
                 let result = await tipoDAO.deleteTipo(id)
+                console.log(result)
                 if(result){
 
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_DELETED_ITEM.status
