@@ -29,6 +29,7 @@ const inserirNovoAdministrador = async function (administrador, contentType) {
 
                 if (result) {
                     administrador.id = result
+                    delete administrador.senha
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATED_ITEM.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATED_ITEM.status_code
                     customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_CREATED_ITEM.message
@@ -48,59 +49,78 @@ const inserirNovoAdministrador = async function (administrador, contentType) {
     }
 }
 
-const autenticarAdministrador = async function (administrador, contentType) {
-    let customMessage = JSON.parse(JSON.stringify(configMessages))
-
-    try {
-        if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
-            let validar = await validarDados(administrador)
-            if (validar) {
-                return validar
-            } else {
-
-                // const senhaValida = await bcrypt.compare(
-                //     administrador.
-                // )
-
-                administrador = await tratarDados(administrador)
-                let result = await admDAO.selectAdministradorByNome(administrador.nome)
 
 
-                if (result) {
+const autenticarAdministrador = async function(
+    administrador,
+    contentType
+){
 
-                    if (result.length > 0) {
+    let customMessage =
+        JSON.parse(JSON.stringify(configMessages))
 
-                        const senhaValida =
-                            await bcrypt.compare(
-                                administrador.senha,
-                                result[0].senha
-                            )
-                            
-                        if (!senhaValida) {
-                            return customMessage.ERROR_UNAUTHORIZED
-                        }
+    try{
 
-                        delete result[0].senha
-                        customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
-                        customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
-                        customMessage.DEFAULT_MESSAGE.response.administrador = result
-
-                        return customMessage.DEFAULT_MESSAGE //200
-                    } else {
-
-                        customMessage.ERROR_NOT_FOUND.field = '[ADMINISTRADOR]'
-                        return customMessage.ERROR_NOT_FOUND //404
-                    }
-                } else {
-                    return customMessage.ERROR_INTERNAL_SERVER_MODEL
-                }
-            }
-        } else {
+        if(String(contentType).toUpperCase() !=
+            'APPLICATION/JSON')
+        {
             return customMessage.ERROR_CONTENT_TYPE
         }
-    } catch (error) {
+
+        let result =
+            await admDAO.selectAdministradorByNome(
+                administrador.nome
+            )
+console.log(result)
+        if(!result || result.length == 0){
+
+            customMessage.ERROR_NOT_FOUND.field =
+                '[ADMINISTRADOR]'
+
+            return customMessage.ERROR_NOT_FOUND
+        }
+
+        const senhaValida =
+            await bcrypt.compare(
+                administrador.senha,
+                result[0].senha
+            )
+
+        if(!senhaValida){
+
+            customMessage.ERROR_UNAUTHORIZED = {
+                status:false,
+                status_code:401,
+                message:'Usuário ou senha inválidos'
+            }
+
+            return customMessage.ERROR_UNAUTHORIZED
+        }
+
+        const token = jwt.sign(
+            {
+                id: result[0].id,
+                nome: result[0].nome
+            },
+            process.env.JWT_SECRET ||
+            'vertex_pizzaria',
+            {
+                expiresIn:'8h'
+            }
+        )
+
+        return {
+            status:true,
+            status_code:200,
+            token
+        }
+
+    }catch(error){
+
         console.log(error)
+
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
+
     }
 
 }
@@ -180,6 +200,10 @@ const atualizarAdministrador = async function (administrador, id, contentType) {
                 let validar = await validarDados(administrador)
                 if (!validar) {
 
+                    administrador.senha = await bcrypt.hash(
+                            administrador.senha,
+                            10
+                        )
                     //Adiciona um atributo ID no JSON de filme, para enviar ao DAO um único objeto
                     administrador.id = Number(id)
 
@@ -270,5 +294,6 @@ module.exports = {
     listarAdministrador,
     atualizarAdministrador,
     buscarAdministrador,
-    excluirAdministrador
+    excluirAdministrador,
+    autenticarAdministrador
 }

@@ -49,7 +49,7 @@ const atualizartipo = async function(tipo, contentType, id) {
             let validarID = await buscartipo(id)
             if(validarID.status){
                 let validar = await validardados(tipo)
-                if(!validarID){
+                if(!validar){
                     tipo.id = Number(id)
 
                     let result = await tipoDAO.updateTipo(await tratardados(tipo))
@@ -59,6 +59,8 @@ const atualizartipo = async function(tipo, contentType, id) {
                         customMessage.DEFAULT_MESSAGE.status_code    = customMessage.SUCCESS_UPDATED_ITEM.status_code
                         customMessage.DEFAULT_MESSAGE.message        = customMessage.SUCCESS_UPDATED_ITEM.message
                         customMessage.DEFAULT_MESSAGE.response       = tipo
+
+                        return customMessage.DEFAULT_MESSAGE
                     }else{
                         return customMessage.ERROR_INTERNAL_SERVER_MODEL
                     }

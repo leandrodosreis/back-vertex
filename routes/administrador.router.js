@@ -4,7 +4,7 @@ const bodyparser = require('body-parser')
 const bodyparserJSON = bodyparser.json()
 const router = express.Router()
 
-const controlleradministrador = require('../controller/administrador/controller.administrador.js')
+const controlleradministrador = require('../controller/administrador/controller_administrador.js')
 
 router.post('/', bodyparserJSON, async function(request, response){
 
@@ -15,6 +15,24 @@ router.post('/', bodyparserJSON, async function(request, response){
     response.status(result.status_code)
     response.json(result)
 })
+router.post(
+    '/login', bodyparserJSON,
+    async function(req,res){
+console.log(req.body)
+        let contentType =
+            req.headers['content-type']
+
+        let result =
+            await controlleradministrador.autenticarAdministrador(
+                req.body,
+                contentType
+            )
+
+        res.status(result.status_code)
+        res.json(result)
+
+    }
+)
 router.get('/', bodyparserJSON, async function(request, response){
 
     let result = await controlleradministrador.listarAdministrador()

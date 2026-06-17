@@ -1,9 +1,10 @@
 #-----------------------------------------
 # CRIANDO O DB
 #-----------------------------------------
-#create database db_acme_pizzaria;
+#drop database db_acme_pizzaria;
 
-## drop database db_acme_pizzaria;
+create database db_acme_pizzaria;
+
  use db_acme_pizzaria;
 #-----------------------------------------
 # TBL PIZZA

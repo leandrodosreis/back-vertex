@@ -83,18 +83,16 @@ const selectALLAdministrador = async function(){
 
 const updateAdministrador = async function(administrador){
     try {
-        let sql = `update into tbl_administrador set 
-        senha = ${administrador.senha},
-        nome = ${administrador.nome}
-        where id = ${id}`
+        let sql = `update tbl_administrador set 
+        senha = '${administrador.senha}',
+        nome = '${administrador.nome}'
+        where id = ${administrador.id}`
 
         //Encaminha para o BD o scriptSQL
         let result = await knexConection.raw(sql)
         
         if(result)
-            return result[0].insertId 
-        else
-            return false
+            return true
     } catch (error) {
         return false
     }
@@ -102,7 +100,7 @@ const updateAdministrador = async function(administrador){
 
 const deleteAdministrador = async function(id){
     try {
-        let sql = `delet from tbl_administrador where id = ${id}`
+        let sql = `delete from tbl_administrador where id = ${id}`
 
         //Encaminha para o BD o scriptSQL
         let result = await knexConection.raw(sql)
