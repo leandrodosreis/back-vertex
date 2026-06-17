@@ -60,8 +60,8 @@ const selectALLTipo = async function(){
 const updateTipo = async function(tipo){
     try {
         let sql =`update tbl_tipo set
-        tipo = '${tipo.nome}'
-        where id = ${id}`
+        nome = '${tipo.nome}'
+        where id = ${tipo.id}`
 
         let result = await knexConection.raw(sql)
         if(result)

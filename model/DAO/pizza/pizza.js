@@ -70,10 +70,10 @@ const selectALL_pizza = async function () {
 
 const update_pizza = async function (pizza) {
     try {
-        let sql = `update tbl_filme set
+        let sql = `update tbl_pizza set
         nome             = '${pizza.nome}',
         descricao         = '${pizza.descricao}',
-        imagem             = '${pizza.imagem}',
+        imagem             = '${pizza.imagem}'
          where id             = ${pizza.id};`
 
         let result = await knexConection.raw(sql)

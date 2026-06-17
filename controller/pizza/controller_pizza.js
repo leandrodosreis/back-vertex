@@ -93,7 +93,7 @@ const atualizarPizza = async function (pizza, id, contentType) {
 
                         if (resultDeleteTipo.status) {
 
-                            for (itemGenero of filme.genero) {
+                            for (itemTipo of pizza.tipo) {
 
 
                                 let pizzaTipo = {
@@ -127,7 +127,7 @@ const atualizarPizza = async function (pizza, id, contentType) {
                 }
 
             } else {
-                return resultBuscarFilme //400(ID inválido) ou 404(não encontrado) ou 500
+                return resultBuscarPizza //400(ID inválido) ou 404(não encontrado) ou 500
             }
         } else {
             return customMessage.ERROR_CONTENT_TYPE
@@ -236,7 +236,7 @@ const excluirPizza = async function (id) {
                 return customMessage.ERROR_INTERNAL_SERVER_MODEL //500 Model
 
         } else {
-            return resultBuscarFilme
+            return resultBuscarPizza
         }
     } catch (error) {
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER //500 Controller

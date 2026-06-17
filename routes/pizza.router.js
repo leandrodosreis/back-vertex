@@ -5,9 +5,9 @@ const bodyparserJSON = bodyparser.json()
 const router = express.Router()
 
 const controllerPizza = require('../controller/pizza/controller_pizza.js')
+const verifyJWT = require('../middleware/middlewareJWT.js')
 
-
-router.post('/', bodyparserJSON, async function(request, response){
+router.post('/', verifyJWT, bodyparserJSON, async function(request, response){
 
     let dados = request.body
     let contentType = request.headers['content-type']
@@ -33,7 +33,7 @@ router.get('/:id', bodyparserJSON, async function(request, response){
     response.json(result)
 
 })
-router.put('/:id', bodyparserJSON, async function(request, response){
+router.put('/:id', verifyJWT, bodyparserJSON, async function(request, response){
     let id = request.params.id
     let dados = request.body
     let contentType = request.headers['content-type']
@@ -43,7 +43,7 @@ router.put('/:id', bodyparserJSON, async function(request, response){
     response.status(result.status_code)
     response.json(result)
 })
-router.delete('/:id', bodyparserJSON, async function(request, response){
+router.delete('/:id', verifyJWT, bodyparserJSON, async function(request, response){
     let id = request.params.id
     let result = await controllerPizza.excluirPizza(id)
     

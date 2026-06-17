@@ -15,18 +15,18 @@ const insert_PizzaTipo = async function (pizzaTipo) {
         let sql = `insert into tbl_pizza_tipo (
             id_pizza,
             id_tipo
-        )values (
+        ) values (
             '${pizzaTipo.id_pizza}',
             '${pizzaTipo.id_tipo}'
         );`
 
         let result = await knexConection.raw(sql)
 
-        if (result) {
-            return true
-        } else {
+        if(result)
+            return result[0].insertId
+        else
             return false
-        }
+
     } catch (error) {
         return false
     }
@@ -117,7 +117,7 @@ const update_PizzaTipo = async function (pizzaTipo) {
     try {
         let sql = `update tbl_pizza_tipo set
         id_pizza            = '${pizzaTipo.id_pizza}',
-        id_tipo             = '${pizzaTipo.id_tipo}',
+        id_tipo             = '${pizzaTipo.id_tipo}'
         where id            = ${pizzaTipo.id};`
 
         let result = await knexConection.raw(sql)
