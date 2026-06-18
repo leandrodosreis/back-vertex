@@ -1,8 +1,8 @@
 /***********************************************************************************************************************
  * Objetivo: Arquivo responsável pela validação, tratamento, manipulação de dados para realizar o CRUD da pizza
  * Data: 20/06/2026
- * Autor: Enzzo
- * Versão: 1.0
+ * Autor: Enzzo (Ajustado para Upload de Imagens)
+ * Versão: 1.1
  ***********************************************************************************************************************/
 
 //Import do arquivo de configurações de mensagens do projeto
@@ -17,7 +17,9 @@ const inserirNovaPizza = async function (pizza, contentType) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
-        if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
+        const contentTypeUpper = String(contentType).toUpperCase();
+        if (contentTypeUpper.includes('APPLICATION/JSON') || contentTypeUpper.includes('MULTIPART/FORM-DATA')) {
+            
             let validar = await validarDados(pizza)
             if (validar) {
                 return validar
@@ -26,25 +28,24 @@ const inserirNovaPizza = async function (pizza, contentType) {
                 if (result) {
                     pizza.id = result
 
-                    for (itemTipo of pizza.tipo) {
+                    // Garante que o array de tipos existe antes de rodar o loop (evita quebras se vier como string do form-data)
+                    if (pizza.tipo) {
+                        // Se o Postman enviar o array como texto, fazemos o parse dele
+                        let listaTipos = typeof pizza.tipo === 'string' ? JSON.parse(pizza.tipo) : pizza.tipo;
 
+                        for (let itemTipo of listaTipos) {
+                            let pizzaTipo = {
+                                "id_pizza": pizza.id,
+                                "id_tipo": itemTipo.id
+                            }
 
-                        let pizzaTipo = {
-                            "id_pizza": pizza.id,
-                            "id_tipo": itemTipo.id
+                            let resultPizzaTipo = await controllerPizzaTipo.inserirNovaPizzaTipo(pizzaTipo)
+                            
+                            if (!resultPizzaTipo.status) {
+                                return customMessage.SUCCESS_CREATED_ITEM_WARNING  //201 com alerta de cadastro
+                            }
                         }
-
-
-                        let resultPizzaTipo = await controllerPizzaTipo.inserirNovaPizzaTipo(pizzaTipo)
-
-                        //Validação para verificar se todos os itens de relacionamento foram inseridos
-                        
-                        if (!resultPizzaTipo.status) {
-                            return customMessage.SUCCESS_CREATED_ITEM_WARNING  //201 com alerta de cadastro
-                        }
-
                     }
-
 
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_CREATED_ITEM.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_CREATED_ITEM.status_code
@@ -60,54 +61,45 @@ const inserirNovaPizza = async function (pizza, contentType) {
             return customMessage.ERROR_CONTENT_TYPE
         }
     } catch (error) {
+        console.error("Erro na Controller Inserir:", error);
         return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER
     }
 }
 
 const atualizarPizza = async function (pizza, id, contentType) {
-
     let customMessage = JSON.parse(JSON.stringify(configMessages))
 
     try {
-        //Validação para verificar se o conteúdo do Body é um JSON
-        if (String(contentType).toUpperCase() == 'APPLICATION/JSON') {
+        const contentTypeUpper = String(contentType).toUpperCase();
+        if (contentTypeUpper.includes('APPLICATION/JSON') || contentTypeUpper.includes('MULTIPART/FORM-DATA')) {
 
             let resultBuscarPizza = await buscarPizza(id)
             if (resultBuscarPizza.status) {
 
-                //Chama a função para validar os dados no
                 let validar = await validarDados(pizza)
                 if (!validar) {
 
-                    //Adiciona um atributo ID no JSON de filme, para enviar ao DAO um único objeto
                     pizza.id = Number(id)
 
-                    //Chama a função para atualizar o filme no BD
                     let result = await pizzaDAO.update_pizza(await tratarDados(pizza))
 
                     if (result) {
-
-                        //Excluir as relações entre o Filme e os Generos (Tabela de relação)
                         let resultDeleteTipo = await controllerPizzaTipo.excluirTipoIdPizza(pizza.id)
 
-                        if (resultDeleteTipo.status) {
+                        if (resultDeleteTipo.status && pizza.tipo) {
+                            let listaTipos = typeof pizza.tipo === 'string' ? JSON.parse(pizza.tipo) : pizza.tipo;
 
-                            for (itemTipo of pizza.tipo) {
-
-
+                            for (let itemTipo of listaTipos) {
                                 let pizzaTipo = {
                                     "id_pizza": pizza.id,
                                     "id_tipo": itemTipo.id
                                 }
 
-
                                 let resultPizzaTipo = await controllerPizzaTipo.inserirNovaPizzaTipo(pizzaTipo)
 
-                                //Validação para verificar se todos os itens de relacionamento foram inseridos
                                 if (!resultPizzaTipo.status) {
-                                    return customMessage.SUCCESS_CREATED_ITEM_WARNING  //201 com alerta de cadastro
+                                    return customMessage.SUCCESS_CREATED_ITEM_WARNING  
                                 }
-
                             }
                         }
 
@@ -116,25 +108,23 @@ const atualizarPizza = async function (pizza, id, contentType) {
                         customMessage.DEFAULT_MESSAGE.message = customMessage.SUCCESS_UPDATE_ITEM.message
                         customMessage.DEFAULT_MESSAGE.response = pizza
 
-                        return customMessage.DEFAULT_MESSAGE //200 (atualizado)
+                        return customMessage.DEFAULT_MESSAGE 
 
                     } else {
-                        return customMessage.ERROR_INTERNAL_SERVER_MODEL  //500 (Model)   
+                        return customMessage.ERROR_INTERNAL_SERVER_MODEL   
                     }
                 } else {
-                    return validar  //400 de validação dos campos do banco de dados
+                    return validar  
                 }
 
             } else {
-                return resultBuscarPizza //400(ID inválido) ou 404(não encontrado) ou 500
+                return resultBuscarPizza 
             }
         } else {
             return customMessage.ERROR_CONTENT_TYPE
         }
-
-
     } catch (error) {
-        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER  //500(controller)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER  
     }
 }
 
@@ -147,20 +137,21 @@ const listarPizza = async function () {
         if (result) {
             if (result.length > 0) {
 
-                for (pizza of result) {
-
+                for (let pizza of result) {
                     let resultTipos = await controllerPizzaTipo.buscarTipoIdPizza(pizza.id)
-
                     if (resultTipos.status) {
-
                         pizza.tipo = resultTipos.response.pizza_tipo
-
                     }
                 }
+                
                 customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                 customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
-                customMessage.DEFAULT_MESSAGE.response.count = result.length
-                customMessage.DEFAULT_MESSAGE.response.pizza = result
+                
+                // Reinicia ou cria o objeto interno de resposta para não duplicar dados na memória do Node
+                customMessage.DEFAULT_MESSAGE.response = {
+                    count: result.length,
+                    pizza: result
+                }
 
                 return customMessage.DEFAULT_MESSAGE
             } else {
@@ -179,43 +170,37 @@ const buscarPizza = async function (id) {
     try {
         if (id == undefined || String(id).replaceAll(' ', '') == '' || id == '' || id == null || isNaN(id) || id <= 0) {
             customMessage.ERROR_BAD_REQUEST.field = '[ID] INVÁLIDO'
-            return customMessage.ERROR_BAD_REQUEST //400
+            return customMessage.ERROR_BAD_REQUEST 
 
         } else {
-
             let result = await pizzaDAO.select_ByIdPizza(id)
 
             if (result) {
-
-
                 if (result.length > 0) {
 
-                    for (pizza of result) {
-
-
+                    for (let pizza of result) {
                         let resultTipos = await controllerPizzaTipo.buscarTipoIdPizza(pizza.id)
-
                         if (resultTipos.status) {
-
                             pizza.tipo = resultTipos.response.pizza_tipo
-
                         }
                     }
 
                     customMessage.DEFAULT_MESSAGE.status = customMessage.SUCCESS_RESPONSE.status
                     customMessage.DEFAULT_MESSAGE.status_code = customMessage.SUCCESS_RESPONSE.status_code
-                    customMessage.DEFAULT_MESSAGE.response.pizza = result
+                    customMessage.DEFAULT_MESSAGE.response = {
+                        pizza: result
+                    }
 
-                    return customMessage.DEFAULT_MESSAGE //200
+                    return customMessage.DEFAULT_MESSAGE 
                 } else {
-                    return customMessage.ERROR_NOT_FOUND //404
+                    return customMessage.ERROR_NOT_FOUND 
                 }
             } else {
-                return customMessage.ERROR_INTERNAL_SERVER_MODEL //500 (Model)
+                return customMessage.ERROR_INTERNAL_SERVER_MODEL 
             }
         }
     } catch (error) {
-        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER //500 (controller)
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER 
     }
 }
 
@@ -224,25 +209,19 @@ const excluirPizza = async function (id) {
     try {
         let resultBuscarPizza = await buscarPizza(id)
 
-        //Validação
         if (resultBuscarPizza.status) {
-
             let result = await pizzaDAO.delete_pizza(id)
-
             if (result)
-                return customMessage.SUCCESS_DELETED_ITEM //200 ou 204
+                return customMessage.SUCCESS_DELETED_ITEM 
             else
-                return customMessage.ERROR_INTERNAL_SERVER_MODEL //500 Model
-
+                return customMessage.ERROR_INTERNAL_SERVER_MODEL 
         } else {
             return resultBuscarPizza
         }
     } catch (error) {
-        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER //500 Controller
+        return customMessage.ERROR_INTERNAL_SERVER_CONTROLLER 
     }
 }
-
-
 
 const validarDados = async function (pizza) {
     let customMessage = JSON.parse(JSON.stringify(configMessages))
@@ -261,13 +240,10 @@ const validarDados = async function (pizza) {
     }
 }
 
-
-
 const tratarDados = async function (pizza) {
-    //Tratamento para eliminar a chegada da aspas ('') como caracter inválido
-    pizza.nome = pizza.nome.replaceAll("'", "")
-    pizza.descricao = pizza.descricao.replaceAll("'", "")
-    pizza.imagem = pizza.imagem.replaceAll("'", "")
+    pizza.nome = String(pizza.nome).replaceAll("'", "")
+    pizza.descricao = String(pizza.descricao).replaceAll("'", "")
+    pizza.imagem = String(pizza.imagem).replaceAll("'", "")
 
     return pizza
 }

@@ -16,6 +16,7 @@ const corsOptions = {
 
 
 app.use(cors(corsOptions))
+app.use('/uploads', express.static('uploads'))
 
 //tipo
 const tiporouter = require('./routes/tipo.router.js')
