@@ -38,9 +38,11 @@ CREATE TABLE tbl_pizza_tipo (
 
     CONSTRAINT fk_pizza_tipo_pizza
         FOREIGN KEY (id_pizza)
-        REFERENCES tbl_pizza(id),
+        REFERENCES tbl_pizza(id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_pizza_tipo_tipo
         FOREIGN KEY (id_tipo)
         REFERENCES tbl_tipo(id)
+        ON DELETE CASCADE
 );
