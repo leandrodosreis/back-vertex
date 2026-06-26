@@ -31,7 +31,8 @@ const administradorrouter = require('./routes/administrador.router.js')
 app.use('/v1/senai/pizzaria/administrador', cors(),administradorrouter)
 
 //porta da API
-app.listen(8080, function(){
-    console.log('API aguardadndo novas requisições ...')
-})
+const PORTA = process.env.PORT || 8080
 
+app.listen(PORTA, function(){
+    console.log('API aguardando novas requisições ...')
+})
