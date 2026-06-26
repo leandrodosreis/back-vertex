@@ -6,9 +6,7 @@
  *********************************************************************************/
 
 
-const knex = require('knex')
-const knexdatabaseConfig = require('../../database_config/knexConfig.js')
-const knexConection = knex(knexdatabaseConfig.development)
+const knexConection = require('../../database_config/connection.js')
 
 const insertTipo = async function(tipo){
     try {
